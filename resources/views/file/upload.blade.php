@@ -1,11 +1,4 @@
 @extends('layouts.app')
-@php
-    //login required
-    $title = 'Upload file';
-
-    //if not logged in redirect to home
-@endphp
-
 @section('content')
 <body>
     <div class="container pt-5">

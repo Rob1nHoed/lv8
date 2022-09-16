@@ -27,6 +27,8 @@ Route::get('/file/download/get/{file}', [FileController::class, 'download'])->na
 Route::get('/file/edit/{key}', [FileController::class, 'toEdit'])->name('file.toEdit');
 Route::post('/file/edit/update/{key}', [FileController::class, 'update'])->name('file.update');
 
+Route::get('/file/delete/{key}', [FileController::class, 'toDelete'])->name('file.toDelete');
+Route::get('/file/delete/destroy/{key}', [FileController::class, 'delete'])->name('file.delete');
 
 Auth::routes();
 

@@ -1,13 +1,9 @@
 @extends('layouts.app')
 @php
-    $expireText = '';
+    $expireText = 'never';
     if($file->expires_at != null){
         $expireText = $file->expires_at;
     }
-    else{
-        $expireText = 'never';
-    }
-
 @endphp
 
 @section('content')

@@ -82,15 +82,15 @@ class FileController extends Controller
         
         return view('home');
     }
-    
+
     public function download($id)
     {
-        //obtain file info
+        // obtain file info
         $file = File::find($id);
         $key = $file->file_key;
         $name = $file->file_name;
 
-        //increment downloads
+        // increment downloads
         $file->downloads = $file->downloads + 1;
         $file->save();
     
@@ -115,6 +115,13 @@ class FileController extends Controller
         return Storage::deleteDirectory('files/' . $key);
     }
     
+    // Deleting directory without a return part doesnt seem to work so im using this
+    public function delete($key)
+    {
+        $this->fullDelete($key);
+        return redirect()->route('home');
+    }
+
     public function show($key)
     {
         $file = File::where('file_key', $key)->firstOrFail();
@@ -155,7 +162,7 @@ class FileController extends Controller
 
         return redirect()->route('home');
     }
-    
+
     public function toUpload()
     {
         if(!Auth::check()){
@@ -180,5 +187,16 @@ class FileController extends Controller
         }
 
         return view('file.edit', ['file' => $file]);
+    }
+
+    public function toDelete($key)
+    {
+        //if file user id is not the same as the logged in user id, redirect to home
+        $file = File::where('file_key', $key)->firstOrFail();
+        if($file->user_id != Auth::id()){
+            return redirect()->route('home');
+        }
+
+        return view('file.delete', ['file' => $file]);
     }
 }

@@ -1,7 +1,4 @@
 @extends('layouts.app')
-@php
-@endphp
-
 @section('content')
 <body>
     <div class="container pt-5">

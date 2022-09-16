@@ -43,7 +43,7 @@
         <div class="col-md-16">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="pt-2" style="text-align: center"><strong>Uploaded a total of {{ Auth::user()->files->count() }} files</strong></h1>
+                    <h1 class="pt-2" style="text-align: center"><strong>Uploads available: {{ Auth::user()->files->count() }} files</strong></h1>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                                     <a href="{{ route('file.toEdit', $file->file_key) }}" class="btn btn-primary"><strong>Edit</strong></a>    
                                 </div>     
                                 <div class="p-1">
-                                    <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Delete</strong></a>    
+                                    <a href="{{ route('file.toDelete', $file->file_key) }}" class="btn btn-primary"><strong>Delete</strong></a>    
                                 </div>     
                             </div>                         
                         </div>
