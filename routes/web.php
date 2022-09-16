@@ -17,15 +17,15 @@ use App\Http\Controllers\FileController;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/file/download/{key}', [FileController::class, 'toDownload'])->name('file.toDownload');
-
 Route::get('/file', [FileController::class, 'toUpload'])->name('file.upload');
-
 Route::get('/file/upload', [FileController::class, 'toUpload'])->name('file.upload');
-
 Route::post('/file/upload/store', [FileController::class, 'store'])->name('file.store');
 
+Route::get('/file/download/{key}', [FileController::class, 'toDownload'])->name('file.toDownload');
 Route::get('/file/download/get/{file}', [FileController::class, 'download'])->name('file.download');
+
+Route::get('/file/edit/{key}', [FileController::class, 'toEdit'])->name('file.toEdit');
+Route::post('/file/edit/update/{key}', [FileController::class, 'update'])->name('file.update');
 
 
 Auth::routes();

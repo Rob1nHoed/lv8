@@ -1,9 +1,13 @@
 @extends('layouts.app')
 @php
-    //login required
-    $title = 'Upload file';
+    $expireText = '';
+    if($file->expires_at != null){
+        $expireText = $file->expires_at;
+    }
+    else{
+        $expireText = 'never';
+    }
 
-    //if not logged in redirect to home
 @endphp
 
 @section('content')
@@ -16,24 +20,16 @@
                     <h1>Send a file</h1>
                 </div>
                 <div class="pt-3">
-                    <form action="{{ route('file.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('file.update', $file->file_key) }}" method="post">
                         @csrf
 
-                        <label for='mail'><h3>Send to</h3></label>
-                        <input type="text" name="mail" id="mail" placeholder="Email@example.com" class="form-control">
-
                         <div class="pt-3"></div>
-                        <label for='file'><h3>Choose a file:</h3></label>
                         <div class="">
-                            <input type="file" name="file" id="file" class="form-control">
-                        </div>
-
-                        <div class="pt-3"></div>
-                        <div class="d-flex">
                             <div class="">
                                 <label for='expiration'><h4>Expiration date</h4></label>
                                 <div>
                                     <select name="expiration" id="expiration" class="form-control">
+                                        <option value="same">Current expiration date: {{ $expireText }}</option>
                                         <option value="">No expiration</option>
                                         <option value="1">One day</option>
                                         <option value="3">Three days</option>
@@ -45,24 +41,24 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="p-4"></div>
+                            <div class="p-2"></div>
                             <div class="">
-                                <label for='max_downloads'><h4>Download limit</h4></label>
+                                <label for='max_downloads'><h4>Download limit</h4><p>Current downloads: {{ $file->downloads }}</p></label>
                                 <div>
-                                    <input type="number" name="max_downloads" id="max_downloads" placeholder="Leave blank if no limit" class="form-control" max="999">
+                                    <input type="number" name="max_downloads" id="max_downloads" placeholder="Leave blank if no limit" class="form-control" value="{{ $file->max_downloads }}" min="{{ $file->downloads }}" max="999">
                                 </div>
                             </div>
                         </div>
 
                         <div class="pt-4">
-                            <label for='description'><h3>Add a message</h3></label>
+                            <label for='description'><h3>Added message</h3></label>
                             <div class="pt-2">
-                                <textarea type="text" name="description" id="description" style="height:200px; width:100%" class="form-control"> </textarea>
+                                <textarea type="text" name="description" id="description" style="height:200px; width:100%" class="form-control" value="{{ $file->description }}"> </textarea>
                             </div>
                         </div>
 
                         <div class="pt-5">
-                            <button type="submit" class="btn btn-primary"><strong>Upload</strong></button>
+                            <button type="submit" class="btn btn-primary"><strong>Update</strong></button>
                         </div>
                     </form>
                 </div>

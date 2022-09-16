@@ -125,6 +125,36 @@ class FileController extends Controller
         return view('file.show', ['file' => $file]);
 
     }
+
+    public function update($key, Request $request)
+    {
+        $file = File::where('file_key', $key)->firstOrFail();
+
+        if($request->expiration != null){
+            $expiration_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' + '. $request->expiration .' day'));
+        }
+        else{
+            $expiration_date = null;
+        }
+
+        if($request->max_downloads == null || $request->max_downloads == 0){
+            $max_downloads = null;
+        }
+        else{
+            $max_downloads = $request->max_downloads;
+        }
+
+        $file->description = $request->description;
+        $file->max_downloads = $max_downloads;
+
+        if($request->expiration != "same"){
+            $file->expires_at = $expiration_date;
+        }
+
+        $file->save();
+
+        return redirect()->route('home');
+    }
     
     public function toUpload()
     {
@@ -139,5 +169,16 @@ class FileController extends Controller
     {     
         $file = File::where('file_key', $key)->firstOrFail();
         return view('file.download' , ['file' => $file]);
+    }
+
+    public function toEdit($key)
+    {
+        //if file user id is not the same as the logged in user id, redirect to home
+        $file = File::where('file_key', $key)->firstOrFail();
+        if($file->user_id != Auth::id()){
+            return redirect()->route('home');
+        }
+
+        return view('file.edit', ['file' => $file]);
     }
 }
