@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('max_downloads')->nullable();
             $table->date('expires_at')->nullable();
             $table->timestamps();
-            $table->boolean('expired')->default(false);
+            $table->softDeletes();
         });
     }
 

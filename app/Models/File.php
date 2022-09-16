@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'file_key',

@@ -14,16 +14,19 @@ class FileController extends Controller
 
     public function store(Request $request)
     {
+        // Validating the request
         $request->validate([
             'file' => 'required|max:32768'
         ]);
         
+        // Giving the file a unique key
         $file_key = Str::random(250);
         
         while (File::where('file_key', $file_key)->exists()) {
             $file_key = Str::random(250);
         }
 
+        // Check if expiration date is set
         if($request->expiration != null)
         {
             $expiration_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' + '. $request->expiration .' day'));
@@ -33,6 +36,7 @@ class FileController extends Controller
             $expiration_date = null;
         }
 
+        // Check if max downloads is set
         if($request->max_downloads == null || $request->max_downloads == 0)
         {
             $max_downloads = null;
@@ -42,6 +46,7 @@ class FileController extends Controller
             $max_downloads = $request->max_downloads;
         }
 
+        // Storing the file information in the database
         $file = new File;
         $file->file_key = $file_key;
         $file->user_id = Auth::id();
@@ -54,8 +59,10 @@ class FileController extends Controller
     
         $fileName = $request->file('file')->getClientOriginalName();
 
+        // Storing the file in the storage
         Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
 
+        // Sending the email to the user
         $expiration = null;
 
         if($request['expiration'] != null)
@@ -66,8 +73,7 @@ class FileController extends Controller
         {
             $expiration .= 'This file will not expire.';
         }
-        
-        //send mail
+
         $details = [
             'title' => 'File Upload',
             'user_name' => Auth::user()->name,
@@ -78,8 +84,6 @@ class FileController extends Controller
             'expiration' => $expiration,
         ];
     
-        
-        //send FileShared mail
         Mail::to($request->mail)->send(new \App\Mail\FileShared($details));
         
         return view('home');
@@ -87,10 +91,12 @@ class FileController extends Controller
     
     public function download($id)
     {
+        //obtain file info
         $file = File::find($id);
-        $file_key = $file->file_key;
-        $file_name = $file->file_name;
+        $key = $file->file_key;
+        $name = $file->file_name;
 
+        //increment downloads
         $file->downloads = $file->downloads + 1;
         $file->save();
     
@@ -98,25 +104,23 @@ class FileController extends Controller
         {
             if($file->downloads >= $file->max_downloads)
             {
-                $file = File::where('file_key', $file_key)->first();
-                $file->expired = true;
-                $file->save();
+                softDelete($key);
             }
         }
-        return Storage::download('files/' . $file_key . '/' . $file_name);
+        return Storage::download('files/' . $key . '/' . $name);
     }   
     
-    public function deleteFile($file_key)
+    public function softDelete($key)
     {
-        Storage::deleteDirectory('files/' . $file_key);
-        return redirect()->route('home');
+        $file = File::where('file_key', $key)->first();
+        $file->delete();
     }
 
-    public function deleteFromDatabase($file_key)
+    public function fullDelete($key)
     {
-        $file = File::where('file_key', $file_key)->first();
-        $file->delete();
-        return redirect()->route('home');
+        $file = File::where('file_key', $key)->first();
+        $file->forceDelete();
+        return Storage::deleteDirectory('files/' . $key);
     }
     
     public function show($key)
