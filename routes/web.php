@@ -17,7 +17,7 @@ use App\Http\Controllers\FileController;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/file/download/{key}', [FileController::class, 'toDownload']);
+Route::get('/file/download/{key}', [FileController::class, 'toDownload'])->name('file.toDownload');
 
 Route::get('/file', [FileController::class, 'toUpload'])->name('file.upload');
 

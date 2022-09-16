@@ -145,7 +145,11 @@ class FileController extends Controller
     public function toDownload($key)
     {     
         $file = File::where('file_key', $key)->firstOrFail();
-
+        
+        if($file->expired == true)
+        {
+            return view('file.expired' , ['user' => Auth::user($file->user_id)->email]);
+        }
         return view('file.download' , ['file' => $file]);
     }
 }

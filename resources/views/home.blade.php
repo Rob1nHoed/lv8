@@ -69,7 +69,7 @@
                             <h2><strong>Downloads:</strong></h2>
                             <h2>{{ $downloads }}</h2>
                         </div>
-                        <div class="d-flex">
+                        <div class="">
                             <div class="p-2">
                                 <p><strong>
                                     expires at: <br>
@@ -88,17 +88,17 @@
                                     ?>
                                 </strong></p>
                             </div>
-            
-                            <div class="p-5"></div>
-                            <div class="p-1"></div>
-                            <!--
-                            <div class="p-1">
-                                <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Copy</strong></a>    
-                            </div>                  
-                        -->          
-                            <div class="p-1 pt-2">
-                                <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Delete</strong></a>    
-                            </div>                            
+                            <div class="d-flex justify-content-center">   
+                                <div class="p-1">
+                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                </div>     
+                                <div class="p-1">
+                                    <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Edit</strong></a>    
+                                </div>     
+                                <div class="p-1">
+                                    <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Delete</strong></a>    
+                                </div>     
+                            </div>                         
                         </div>
                     </div>
                 </div>   
