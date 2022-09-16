@@ -27,22 +27,18 @@ class FileController extends Controller
         }
 
         // Check if expiration date is set
-        if($request->expiration != null)
-        {
+        if($request->expiration != null){
             $expiration_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' + '. $request->expiration .' day'));
         }
-        else
-        {
+        else{
             $expiration_date = null;
         }
 
         // Check if max downloads is set
-        if($request->max_downloads == null || $request->max_downloads == 0)
-        {
+        if($request->max_downloads == null || $request->max_downloads == 0){
             $max_downloads = null;
         }
-        else
-        {
+        else{
             $max_downloads = $request->max_downloads;
         }
 
@@ -65,12 +61,10 @@ class FileController extends Controller
         // Sending the email to the user
         $expiration = null;
 
-        if($request['expiration'] != null)
-        {
+        if($request['expiration'] != null){
             $expiration .= 'This file will expire in ' . $request['expiration'] . ' days.';
         }
-        else
-        {
+        else{
             $expiration .= 'This file will not expire.';
         }
 
@@ -100,13 +94,11 @@ class FileController extends Controller
         $file->downloads = $file->downloads + 1;
         $file->save();
     
-        if($file->max_downloads != null)
-        {
-            if($file->downloads >= $file->max_downloads)
-            {
-                softDelete($key);
-            }
+        // Check if the file has a download limit and if it has been reached
+        if($file->max_downloads != null && $file->downloads >= $file->max_downloads){
+            $this->softDelete($key);
         }
+
         return Storage::download('files/' . $key . '/' . $name);
     }   
     
@@ -119,7 +111,7 @@ class FileController extends Controller
     public function fullDelete($key)
     {
         $file = File::where('file_key', $key)->first();
-        $file->forceDelete();
+        $file->delete();
         return Storage::deleteDirectory('files/' . $key);
     }
     
@@ -127,14 +119,11 @@ class FileController extends Controller
     {
         $file = File::where('file_key', $key)->firstOrFail();
 
-        if($file->expired == true)
-        {
+        if($file->expired == true){
             return view('file_expired'); 
         }
-        else
-        {
-            return view('file.show', ['file' => $file]);
-        }
+        return view('file.show', ['file' => $file]);
+
     }
     
     public function toUpload()
@@ -149,11 +138,6 @@ class FileController extends Controller
     public function toDownload($key)
     {     
         $file = File::where('file_key', $key)->firstOrFail();
-        
-        if($file->expired == true)
-        {
-            return view('file.expired' , ['user' => Auth::user($file->user_id)->email]);
-        }
         return view('file.download' , ['file' => $file]);
     }
 }

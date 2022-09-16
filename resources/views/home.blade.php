@@ -93,10 +93,10 @@
                                     <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
                                 </div>     
                                 <div class="p-1">
-                                    <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Edit</strong></a>    
+                                    <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Edit</strong></a>    
                                 </div>     
                                 <div class="p-1">
-                                    <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Delete</strong></a>    
+                                    <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Delete</strong></a>    
                                 </div>     
                             </div>                         
                         </div>
