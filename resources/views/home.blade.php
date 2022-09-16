@@ -43,7 +43,7 @@
         <div class="col-md-16">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="pt-2" style="text-align: center"><strong>Uploads available: {{ Auth::user()->files->count() }} files</strong></h1>
+                    <h1 class="pt-2" style="text-align: center"><strong>Files available: {{ Auth::user()->files->count() }} files</strong></h1>
                 </div>
             </div>
         </div>
