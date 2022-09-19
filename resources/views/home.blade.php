@@ -6,7 +6,6 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
-
                 <div class="card-body">
                     @if (Auth::check())
                         <div class="pt-3" style="position: relative; text-align:center;">
@@ -55,23 +54,21 @@
             <div class="col-3 pb-3 pt-2">
                 <div class="card" style="max-width:300px">
                     <div class="card-header pt-3">
-                        <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>{{ Auth::user($file->user_id)->email }}</strong></h2>                    
-                        <h3>sended you a file.</h3>
+                        <h4 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>{{ App\Models\User::find($file->user_id)->email }}</strong></h4>                    
+                        <h4>sended you a file.</h4>
                     </div>
-                    <div class="pt-2">
-                        <div class="justify-content-center">   
+                    <div class="pt-2">  
                             <div class="p-2">
                                 <h4>{{ $file->file_name }}</h4>
                             </div>
-                            <div class="d-flex">
-                                <div class="p-1">
-                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Remove</strong></a>    
-                                </div>    
+                            <div class="d-flex justify-content-center">
                                 <div class="p-1">
                                     <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
                                 </div>       
-                            </div>   
-                        </div>                         
+                                <div class="p-1">
+                                    <a href="{{ route('file.removeFrom.sended', $file->file_key) }}" class="btn btn-primary"><strong>Remove</strong></a>    
+                                </div>    
+                            </div>                           
                     </div>
                 </div>
             </div>   
@@ -173,14 +170,16 @@
                         <div class="card-header pt-3">
                             <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong></strong>{{ $file->file_name }}</h2>                    
                         </div>
-                        <div class="pt-2">
+                        <div class="pt-2 ">
                             <div class="justify-content-center">   
                                 <div class="p-2">
                                     <h4><strong>Downloaded from:</strong> {{ Auth::user($file->user_id)->email }}</h4>
-                                </div>
-                                <div class="p-1">
-                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
-                                </div>       
+                                </div> 
+                                <div class="d-flex justify-content-center">  
+                                    <div class="p-1">
+                                        <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                    </div>       
+                                </div>     
                             </div>                         
                         </div>
                     </div>

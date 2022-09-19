@@ -12,6 +12,15 @@ use App\Models\User;
 class FileController extends Controller
 {
 
+    public function toUpload()
+    {
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+        
+        return view('file.upload');
+    }
+
     public function store(Request $request)
     {
         // Validating the request
@@ -75,15 +84,44 @@ class FileController extends Controller
             'expiration' => $expiration,
         ];
     
-        // Sending the email to the user
-        Mail::to($request->mail)->send(new \App\Mail\FileShared($details));
-        
-        // If the recievers email is registered, add relation to the file
-        if(User::where('email', $request->mail)->exists()){
-            $file->send()->attach(User::where('email', $request->mail)->first()->id);
+        // Get every email from mail without spaces and comma
+        $emails = preg_split('/[\s,]+/', $request->mail, -1, PREG_SPLIT_NO_EMPTY);
+
+        // Sending the email(s)
+        foreach($emails as $email){
+            Mail::to($email)->send(new \App\Mail\FileShared($details));
+
+            // If the recievers email is registered, add relation to the file
+            if(User::where('email', $email)->exists()){
+                //$file->send()->attach(User::where('email', $request->mail)->first()->id);
+                User::where('email', $email)->first()->recieved()->attach($file->id);
+            }
         }
+        
 
         return view('home');
+    }
+    
+    public function show($key)
+    {
+        $file = File::where('file_key', $key)->firstOrFail();
+
+        if($file->expired == true){
+            return view('file_expired'); 
+        }
+        return view('file.show', ['file' => $file]);
+
+    }
+   
+    public function toDownload($key)
+    {     
+        $file = File::where('file_key', $key)->firstOrFail();
+
+        if($file->expired == true || $file->downloads >= $file->max_downloads){
+            return view('file.expired'); 
+        }
+
+        return view('file.download' , ['file' => $file]);
     }
 
     public function download($id)
@@ -108,40 +146,16 @@ class FileController extends Controller
 
         return Storage::download('files/' . $key . '/' . $name);
     }   
-    
-    public function softDelete($key)
-    {
-        $file = File::where('file_key', $key)->first();
-        $file->delete();
-    }
 
-    public function fullDelete($key)
+    public function toEdit($key)
     {
-        $file = File::where('file_key', $key)->first();
-        $file->delete();
-
-        $file->send()->detach();
-        $file->downloads()->detach();
-
-        return Storage::deleteDirectory('files/' . $key);
-    }
-    
-    // Deleting directory without a return part doesnt seem to work so im using this
-    public function delete($key)
-    {
-        $this->fullDelete($key);
-        return redirect()->route('home');
-    }
-
-    public function show($key)
-    {
+        //if file user id is not the same as the logged in user id, redirect to home
         $file = File::where('file_key', $key)->firstOrFail();
-
-        if($file->expired == true){
-            return view('file_expired'); 
+        if($file->user_id != Auth::id()){
+            return redirect()->route('home');
         }
-        return view('file.show', ['file' => $file]);
 
+        return view('file.edit', ['file' => $file]);
     }
 
     public function update($key, Request $request)
@@ -173,38 +187,7 @@ class FileController extends Controller
 
         return redirect()->route('home');
     }
-
-    public function toUpload()
-    {
-        if(!Auth::check()){
-            return redirect()->route('login');
-        }
-        
-        return view('file.upload');
-    }
     
-    public function toDownload($key)
-    {     
-        $file = File::where('file_key', $key)->firstOrFail();
-
-        if($file->expired == true || $file->downloads >= $file->max_downloads){
-            return view('file.expired'); 
-        }
-
-        return view('file.download' , ['file' => $file]);
-    }
-
-    public function toEdit($key)
-    {
-        //if file user id is not the same as the logged in user id, redirect to home
-        $file = File::where('file_key', $key)->firstOrFail();
-        if($file->user_id != Auth::id()){
-            return redirect()->route('home');
-        }
-
-        return view('file.edit', ['file' => $file]);
-    }
-
     public function toDelete($key)
     {
         //if file user id is not the same as the logged in user id, redirect to home
@@ -214,5 +197,38 @@ class FileController extends Controller
         }
 
         return view('file.delete', ['file' => $file]);
+    }
+
+    public function softDelete($key)
+    {
+        $file = File::where('file_key', $key)->first();
+        $file->delete();
+    }
+
+    public function fullDelete($key)
+    {
+        $file = File::where('file_key', $key)->first();
+        $file->delete();
+
+        //find user by id and detach
+        $user = User::find(Auth::id());
+        $user->recieved()->detach($file->id);
+        $user->downloaded()->detach($file->id);
+
+
+        return Storage::deleteDirectory('files/' . $key);
+    }
+    
+    public function delete($key)
+    {
+        // Deleting directory without a return part doesnt seem to work so im using this
+        $this->fullDelete($key);
+        return redirect()->route('home');
+    }
+ 
+    public function removeFromSended($key)
+    {
+        Auth::user()->recieved()->detach(File::where('file_key', $key)->first()->id);
+        return redirect()->route('home');
     }
 }
