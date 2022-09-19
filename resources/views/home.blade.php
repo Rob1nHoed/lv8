@@ -32,7 +32,6 @@
     </div>
 
 @if (Auth::check())
-
 <!-- Files recieved -->
     @php
         $recieved_files = Auth::user()->recieved;
