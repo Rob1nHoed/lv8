@@ -5,9 +5,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\File;
-
 use Illuminate\Support\Str;
+use App\Models\File;
 
 class FileController extends Controller
 {
@@ -90,10 +89,14 @@ class FileController extends Controller
         // increment downloads
         $file->downloads = $file->downloads + 1;
         $file->save();
-    
-        // Check if the file has a download limit and if it has been reached
+
         if($file->max_downloads != null && $file->downloads >= $file->max_downloads){
             $this->softDelete($key);
+        }
+
+        // Check if relation between user and file is already created, if not create it
+        if(!\DB::table('file_user')->where('file_id', $id)->where('user_id', Auth::id())->exists()){
+            auth()->user()->downloaded()->attach($file->id);
         }
 
         return Storage::download('files/' . $key . '/' . $name);

@@ -46,4 +46,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class);
     }
+
+    public function downloaded()
+    {
+        return $this->BelongsToMany(File::class);
+    }
+    
 }
