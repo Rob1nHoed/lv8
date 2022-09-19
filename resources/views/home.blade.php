@@ -8,7 +8,6 @@
                 <div class="card-header">{{ __('Dashboard') }}</div>
 
                 <div class="card-body">
-                    <!-- check if logged in -->
                     @if (Auth::check())
                         <div class="pt-3" style="position: relative; text-align:center;">
                             <div class="">
@@ -63,7 +62,7 @@
                 <div class="col-3 pb-3">
                     <div class="card" style="max-width:300px">
                         <div class="card-header pt-3">
-                            <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>aawdwaaa.txt</strong></h2>                    
+                            <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>{{ $file->file_name }}</strong></h2>                    
                         </div>
                         <div class="card-body">
                             <h2><strong>Downloads:</strong></h2>

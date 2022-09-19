@@ -48,7 +48,6 @@ class FileController extends Controller
         $file->user_id = Auth::id();
         $file->file_name = $request->file('file')->getClientOriginalName();
         $file->description = $request->description;
-        $file->downloads = 0;
         $file->max_downloads = $max_downloads;
         $file->expires_at = $expiration_date;
         $file->save();
@@ -59,13 +58,11 @@ class FileController extends Controller
         Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
 
         // Sending the email to the user
-        $expiration = null;
-
         if($request['expiration'] != null){
-            $expiration .= 'This file will expire in ' . $request['expiration'] . ' days.';
+            $expiration = 'This file will expire in ' . $request['expiration'] . ' days.';
         }
         else{
-            $expiration .= 'This file will not expire.';
+            $expiration = 'This file will not expire.';
         }
 
         $details = [
@@ -175,6 +172,11 @@ class FileController extends Controller
     public function toDownload($key)
     {     
         $file = File::where('file_key', $key)->firstOrFail();
+
+        if($file->expired == true || $file->downloads >= $file->max_downloads){
+            return view('file.expired'); 
+        }
+
         return view('file.download' , ['file' => $file]);
     }
 
