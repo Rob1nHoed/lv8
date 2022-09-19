@@ -28,6 +28,11 @@ class File extends Model
 
     public function downloads()
     {
-        return $this->HasMany(User::class);
+        return $this->HasMany(User::class , 'file_user_downloads');
+    }
+
+    public function send()
+    {
+        return $this->HasMany(User::class , 'file_user_recieved');
     }
 }

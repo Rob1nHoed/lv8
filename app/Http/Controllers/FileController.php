@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\File;
+use App\Models\User;
 
 class FileController extends Controller
 {
@@ -74,8 +75,14 @@ class FileController extends Controller
             'expiration' => $expiration,
         ];
     
+        // Sending the email to the user
         Mail::to($request->mail)->send(new \App\Mail\FileShared($details));
         
+        // If the recievers email is registered, add relation to the file
+        if(User::where('email', $request->mail)->exists()){
+            $file->send()->attach(User::where('email', $request->mail)->first()->id);
+        }
+
         return view('home');
     }
 
@@ -95,7 +102,7 @@ class FileController extends Controller
         }
 
         // Check if relation between user and file is already created, if not create it
-        if(!\DB::table('file_user')->where('file_id', $id)->where('user_id', Auth::id())->exists()){
+        if(!\DB::table('file_user_downloads')->where('file_id', $id)->where('user_id', Auth::id())->exists()){
             auth()->user()->downloaded()->attach($file->id);
         }
 
@@ -112,6 +119,10 @@ class FileController extends Controller
     {
         $file = File::where('file_key', $key)->first();
         $file->delete();
+
+        $file->send()->detach();
+        $file->downloads()->detach();
+
         return Storage::deleteDirectory('files/' . $key);
     }
     
