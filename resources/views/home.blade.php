@@ -52,14 +52,14 @@
 
         @foreach ($recieved_files as $file)
             <div class="col-3 pb-3 pt-2">
-                <div class="card" style="max-width:300px">
+                <div class="card" style="max-width:282px">
                     <div class="card-header pt-3">
                         <h4 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>{{ App\Models\User::find($file->user_id)->email }}</strong></h4>                    
                         <h4>sended you a file.</h4>
                     </div>
                     <div class="pt-2">  
                             <div class="p-2">
-                                <h4>{{ $file->file_name }}</h4>
+                                <h4 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap; max-width:100%;">{{ $file->file_name }}</h4>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <div class="p-1">
@@ -103,7 +103,7 @@
                 @endphp
 
                 <div class="col-3 pb-3">
-                    <div class="card" style="max-width:300px">
+                    <div class="card" style="max-width:305px">
                         <div class="card-header pt-3">
                             <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>{{ $file->file_name }}</strong></h2>                    
                         </div>
@@ -166,7 +166,7 @@
         @foreach ($downloaded_files as $file)
 
                 <div class="col-3 pb-3 pt-2">
-                    <div class="card" style="max-width:300px">
+                    <div class="card" style="max-width:282px">
                         <div class="card-header pt-3">
                             <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong></strong>{{ $file->file_name }}</h2>                    
                         </div>
