@@ -15,6 +15,8 @@ use App\Http\Controllers\FileController;
 |
 */
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/file', [FileController::class, 'toUpload'])->name('file.upload');
@@ -29,6 +31,9 @@ Route::post('/file/edit/update/{key}', [FileController::class, 'update'])->name(
 
 Route::get('/file/delete/{key}', [FileController::class, 'toDelete'])->name('file.toDelete');
 Route::get('/file/delete/destroy/{key}', [FileController::class, 'delete'])->name('file.delete');
+
+//route named file.removeFrom.sended
+Route::get('/file/removeFrom/sended/{key}', [FileController::class, 'removeFromSended'])->name('file.removeFrom.sended');
 
 Auth::routes();
 

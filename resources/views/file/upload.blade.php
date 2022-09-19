@@ -13,7 +13,7 @@
                         @csrf
 
                         <label for='mail'><h3>Send to</h3></label>
-                        <input type="text" name="mail" id="mail" placeholder="Email@example.com" class="form-control">
+                        <input type="text" name="mail" id="mail" placeholder="Email@example.com" class="form-control" multiple>
 
                         <div class="pt-3"></div>
                         <label for='file'><h3>Choose a file:</h3></label>

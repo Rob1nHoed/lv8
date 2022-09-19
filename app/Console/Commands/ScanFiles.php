@@ -50,9 +50,7 @@ class ScanFiles extends Command
                 }
             }
         }
-
-
-
+        
         return 0;
     }
 }
