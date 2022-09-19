@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class FileShared extends Mailable
+class FileDownloadLimitReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,9 +16,9 @@ class FileShared extends Mailable
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct()
     {
-        $this->details = $details;
+        //
     }
 
     /**
@@ -28,8 +28,6 @@ class FileShared extends Mailable
      */
     public function build()
     {
-        $details = $this->details;
-
-        return $this->markdown('emails.file_shared', compact('details'));
+        return $this->view('view.name');
     }
 }

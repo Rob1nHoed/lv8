@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class FileShared extends Mailable
+class FileExpirationReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +30,6 @@ class FileShared extends Mailable
     {
         $details = $this->details;
 
-        return $this->markdown('emails.file_shared', compact('details'));
+        return $this->markdown('emails.file_expiration_reminder', compact('details'));
     }
 }
