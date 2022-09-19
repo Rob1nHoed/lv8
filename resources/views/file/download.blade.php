@@ -24,6 +24,9 @@
                             <h3 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $file->file_name }}">{{ $file->file_name }}</h3>
                         </div>
                         <div class="">
+                            <copy-to-clipboard>
+                        </div>
+                        <div class="">
                             <a href="{{ route('file.download', $file) }}" class="btn btn-primary"><strong>Download</strong></a>
                         </div>
                     </div>
