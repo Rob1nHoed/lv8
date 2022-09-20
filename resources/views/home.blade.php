@@ -62,7 +62,7 @@
                             </div>
                             <div class="d-flex justify-content-center">
                                 <div class="p-1">
-                                    <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
                                 </div>       
                                 <div class="p-1">
                                     <a href="{{ route('file.removeFrom.sended', $file) }}" class="btn btn-primary"><strong>Remove</strong></a>    
@@ -131,7 +131,7 @@
                             </div>
                             <div class="d-flex justify-content-center">   
                                 <div class="p-1">
-                                    <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
                                 </div>     
                                 <div class="p-1">
                                     <a href="{{ route('file.toEdit', $file) }}" class="btn btn-primary"><strong>Edit</strong></a>    
@@ -176,7 +176,7 @@
                                 </div> 
                                 <div class="d-flex justify-content-center">  
                                     <div class="p-1">
-                                        <a href="{{ route('file.toDownload', $file) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                        <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
                                     </div>       
                                 </div>     
                             </div>                         

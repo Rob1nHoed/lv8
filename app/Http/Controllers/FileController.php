@@ -104,8 +104,10 @@ class FileController extends Controller
 
     }
    
-    public function toDownload(File $file)
+    public function toDownload($key)
     {     
+        $file = File::where('file_key', $key)->first();
+
         if($file->expired == true || $file->downloads >= $file->max_downloads){
             return view('file.expired'); 
         }

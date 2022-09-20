@@ -16,7 +16,7 @@ Route::controller(FileController::class)->group(function () {
     Route::get('/file/upload', 'toUpload')->name('file.upload');
     Route::post('/file/upload/store', 'store')->name('file.store');
 
-    Route::get('/file/download/{file}', 'toDownload')->name('file.toDownload');
+    Route::get('/file/download/{key}', 'toDownload')->name('file.toDownload');
     Route::get('/file/download/get/{file}', 'download')->name('file.download');
 
     Route::get('/file/edit/{file}', 'toEdit')->name('file.toEdit');
