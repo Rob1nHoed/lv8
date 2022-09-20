@@ -102,10 +102,8 @@ class FileController extends Controller
         return view('home');
     }
     
-    public function show($key)
+    public function show(File $file)
     {
-        $file = File::where('file_key', $key)->firstOrFail();
-
         if($file->expired == true){
             return view('file_expired'); 
         }
@@ -113,21 +111,18 @@ class FileController extends Controller
 
     }
    
-    public function toDownload($key)
+    public function toDownload(File $file)
     {     
-        $file = File::where('file_key', $key)->firstOrFail();
-
         if($file->expired == true || $file->downloads >= $file->max_downloads){
             return view('file.expired'); 
         }
 
-        return view('file.download' , ['file' => $file]);
+        return view('file.download', compact('file'));
     }
 
-    public function download($id)
+    public function download(File $file)
     {
         // obtain file info
-        $file = File::find($id);
         $key = $file->file_key;
         $name = $file->file_name;
 
@@ -140,17 +135,15 @@ class FileController extends Controller
         }
 
         // Check if relation between user and file is already created, if not create it
-        if(!\DB::table('file_user_downloads')->where('file_id', $id)->where('user_id', Auth::id())->exists()){
+        if(!\DB::table('file_user_downloads')->where('file_id', $file->id)->where('user_id', Auth::id())->exists()){
             auth()->user()->downloaded()->attach($file->id);
         }
 
         return Storage::download('files/' . $key . '/' . $name);
     }   
 
-    public function toEdit($key)
+    public function toEdit(File $file)
     {
-        //if file user id is not the same as the logged in user id, redirect to home
-        $file = File::where('file_key', $key)->firstOrFail();
         if($file->user_id != Auth::id()){
             return redirect()->route('home');
         }
@@ -158,10 +151,8 @@ class FileController extends Controller
         return view('file.edit', ['file' => $file]);
     }
 
-    public function update($key, Request $request)
+    public function update(File $file, Request $request)
     {
-        $file = File::where('file_key', $key)->firstOrFail();
-
         if($request->expiration != null){
             $expiration_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' + '. $request->expiration .' day'));
         }
@@ -188,10 +179,9 @@ class FileController extends Controller
         return redirect()->route('home');
     }
     
-    public function toDelete($key)
+    public function toDelete(File $file)
     {
         //if file user id is not the same as the logged in user id, redirect to home
-        $file = File::where('file_key', $key)->firstOrFail();
         if($file->user_id != Auth::id()){
             return redirect()->route('home');
         }
@@ -199,15 +189,13 @@ class FileController extends Controller
         return view('file.delete', ['file' => $file]);
     }
 
-    public function softDelete($key)
+    public function softDelete(File $file)
     {
-        $file = File::where('file_key', $key)->first();
         $file->delete();
     }
 
-    public function fullDelete($key)
+    public function fullDelete(File $file)
     {
-        $file = File::where('file_key', $key)->first();
         $file->delete();
 
         //find user by id and detach
@@ -216,19 +204,19 @@ class FileController extends Controller
         $user->downloaded()->detach($file->id);
 
 
-        return Storage::deleteDirectory('files/' . $key);
+        return Storage::deleteDirectory('files/' . $file->file_key);
     }
     
-    public function delete($key)
+    public function delete(File $file)
     {
         // Deleting directory without a return part doesnt seem to work so im using this
-        $this->fullDelete($key);
+        $this->fullDelete($file);
         return redirect()->route('home');
     }
  
-    public function removeFromSended($key)
+    public function removeFromSended(File $file)
     {
-        Auth::user()->recieved()->detach(File::where('file_key', $key)->first()->id);
+        Auth::user()->recieved()->detach($file->id);
         return redirect()->route('home');
     }
 }

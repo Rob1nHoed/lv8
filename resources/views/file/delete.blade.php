@@ -18,7 +18,7 @@
                         <a href="{{ route('home') }}" class="btn btn-primary"><strong>Cancel</strong></a>
                     </div>
                     <div class="p-3">
-                        <a href="{{ route('file.delete', $file->file_key) }}" class="btn btn-warning"><strong>Delete</strong></a>
+                        <a href="{{ route('file.delete', $file) }}" class="btn btn-warning"><strong>Delete</strong></a>
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@
                     <h1>Send a file</h1>
                 </div>
                 <div class="pt-3">
-                    <form action="{{ route('file.update', $file->file_key) }}" method="post">
+                    <form action="{{ route('file.update', $file) }}" method="post">
                         @csrf
 
                         <div class="pt-3"></div>
