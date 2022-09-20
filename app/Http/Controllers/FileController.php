@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
@@ -8,25 +9,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\File;
 use App\Models\User;
+use App\Http\Requests\StoreFileRequest;
 
 class FileController extends Controller
 {
 
     public function toUpload()
     {
-        if(!Auth::check()){
-            return redirect()->route('login');
-        }
-        
+        $this->checkAuth();
         return view('file.upload');
     }
 
-    public function store(Request $request)
+    public function store(StoreFileRequest $request)
     {
-        // Validating the request
-        $request->validate([
-            'file' => 'required|max:32768'
-        ]);
+        $this->checkAuth();
         
         // Giving the file a unique key
         $file_key = Str::random(250);
@@ -218,5 +214,12 @@ class FileController extends Controller
     {
         Auth::user()->recieved()->detach($file->id);
         return redirect()->route('home');
+    }
+
+    private function checkAuth()
+    {
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
     }
 }
