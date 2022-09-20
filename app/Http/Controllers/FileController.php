@@ -21,9 +21,7 @@ class FileController extends Controller
     }
 
     public function store(StoreFileRequest $request)
-    {
-        $this->checkAuth();
-        
+    {      
         // Giving the file a unique key
         $file_key = Str::random(250);
         
@@ -47,18 +45,18 @@ class FileController extends Controller
             $max_downloads = $request->max_downloads;
         }
 
-        // Storing the file information in the database
-        $file = new File;
-        $file->file_key = $file_key;
-        $file->user_id = Auth::id();
-        $file->file_name = $request->file('file')->getClientOriginalName();
-        $file->description = $request->description;
-        $file->max_downloads = $max_downloads;
-        $file->expires_at = $expiration_date;
-        $file->save();
-    
         $fileName = $request->file('file')->getClientOriginalName();
 
+        //store file from model
+        $file = File::create([
+            'file_key' => $file_key,
+            'user_id' => Auth::user()->id,
+            'file_name' => $fileName,
+            'description' => $request->description,
+            'downloads' => 0,
+            'max_downloads' => $max_downloads,
+            'expires_at' => $expiration_date,
+        ]);
         // Storing the file in the storage
         Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
 
@@ -94,7 +92,6 @@ class FileController extends Controller
             }
         }
         
-
         return view('home');
     }
     
@@ -140,9 +137,7 @@ class FileController extends Controller
 
     public function toEdit(File $file)
     {
-        if($file->user_id != Auth::id()){
-            return redirect()->route('home');
-        }
+        $this->checkAuth();
 
         return view('file.edit', ['file' => $file]);
     }
@@ -177,11 +172,7 @@ class FileController extends Controller
     
     public function toDelete(File $file)
     {
-        //if file user id is not the same as the logged in user id, redirect to home
-        if($file->user_id != Auth::id()){
-            return redirect()->route('home');
-        }
-
+        $this->checkAuth();
         return view('file.delete', ['file' => $file]);
     }
 
@@ -190,7 +181,7 @@ class FileController extends Controller
         $file->delete();
     }
 
-    public function fullDelete(File $file)
+    private function fullDelete(File $file)
     {
         $file->delete();
 
