@@ -8,13 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-
 use App\Models\File;
 use App\Models\User;
 
@@ -49,14 +46,14 @@ class ProcessFile implements ShouldQueue
         $fileData = $this->fileData;
 
         //add file in database
-        File::create($fileData);
+        $fileData = File::create($fileData);
 
         //send email to receivers
         foreach($this->emails as $email){
             Mail::to($email)->send(new \App\Mail\FileShared($this->details));
 
             if (User::where('email', $email)->exists()){
-                User::where('email', $email)->first()->recieved()->attach($fileData['id']);
+                User::where('email', $email)->first()->recieved()->attach($fileData->id);
             }
         }
     }

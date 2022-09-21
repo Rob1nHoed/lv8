@@ -20,8 +20,8 @@
                         </div>
                     </div>
                     <div class="pt-4 d-flex">
-                        <div class="pt-1 w-75">
-                            <h3 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $file->file_name }}">{{ $file->file_name }}</h3>
+                        <div class="pt-1" style="width:55%;">
+                            <h3 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap; width:100%;" title="{{ $file->file_name }}">{{ $file->file_name }}</h3>
                         </div>
                         <div class="">
                             <copy-to-clipboard>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('file_key', 255)->unique();
             $table->unsignedBigInteger('user_id');
             $table->string('file_name', 255);
-            $table->longText('description', 255);
+            $table->longText('description', 255)->nullable();
             $table->integer('downloads')->default(0);
             $table->integer('max_downloads')->nullable();
             $table->date('expires_at')->nullable();

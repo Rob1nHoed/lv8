@@ -121,7 +121,7 @@ class FileController extends Controller
     {     
         $file = File::where('file_key', $key)->first();
 
-        if($file->expired == true || $file->downloads >= $file->max_downloads){
+        if($file->downloads >= $file->max_downloads && $file->max_downloads != null){
             return view('file.expired'); 
         }
 
