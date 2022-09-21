@@ -24,7 +24,7 @@ class StoreFileRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'required|max:32768',
+            'file' => 'required', // |max:32768
         ];
     }
 }

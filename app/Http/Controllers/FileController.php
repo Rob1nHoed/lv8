@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\File;
 use App\Models\User;
 use App\Http\Requests\StoreFileRequest;
+use App\Jobs\ProcessFile;
 
 class FileController extends Controller
 {
@@ -57,8 +58,10 @@ class FileController extends Controller
             'max_downloads' => $max_downloads,
             'expires_at' => $expiration_date,
         ]);
+        
         // Storing the file in the storage
         Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
+
 
         // Sending the email to the user
         if($request['expiration'] != null){
@@ -91,7 +94,7 @@ class FileController extends Controller
                 User::where('email', $email)->first()->recieved()->attach($file->id);
             }
         }
-        
+
         return view('home');
     }
     

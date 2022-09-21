@@ -163,28 +163,27 @@
             </div>
         
         @foreach ($downloaded_files as $file)
-
-                <div class="col-3 pb-3 pt-2">
-                    <div class="card" style="max-width:282px">
-                        <div class="card-header pt-3">
-                            <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong></strong>{{ $file->file_name }}</h2>                    
-                        </div>
-                        <div class="pt-2 ">
-                            <div class="justify-content-center">   
-                                <div class="p-2">
-                                    <h4><strong>Downloaded from:</strong> {{ Auth::user($file->user_id)->email }}</h4>
-                                </div> 
-                                <div class="d-flex justify-content-center">  
-                                    <div class="p-1">
-                                        <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
-                                    </div>       
-                                </div>     
-                            </div>                         
-                        </div>
+            <div class="col-3 pb-3 pt-2">
+                <div class="card" style="max-width:282px">
+                    <div class="card-header pt-3">
+                        <h2 style="overflow:hidden; text-overflow: ellipsis; white-space: nowrap;"><strong></strong>{{ $file->file_name }}</h2>                    
                     </div>
-                </div>   
-            @endforeach
-        </div>
+                    <div class="pt-2 ">
+                        <div class="justify-content-center">   
+                            <div class="p-2">
+                                <h4><strong>Downloaded from:</strong> {{ Auth::user($file->user_id)->email }}</h4>
+                            </div> 
+                            <div class="d-flex justify-content-center">  
+                                <div class="p-1">
+                                    <a href="{{ route('file.toDownload', $file->file_key) }}" class="btn btn-primary"><strong>Download</strong></a>    
+                                </div>       
+                            </div>     
+                        </div>                         
+                    </div>
+                </div>
+            </div>   
+        @endforeach
+    </div>
     
 @endif
 </div>
