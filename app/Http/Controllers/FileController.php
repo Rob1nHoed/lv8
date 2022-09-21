@@ -49,7 +49,7 @@ class FileController extends Controller
         $fileName = $request->file('file')->getClientOriginalName();
 
         //store file from model
-        $file = File::create([
+        $file = [
             'file_key' => $file_key,
             'user_id' => Auth::user()->id,
             'file_name' => $fileName,
@@ -57,11 +57,12 @@ class FileController extends Controller
             'downloads' => 0,
             'max_downloads' => $max_downloads,
             'expires_at' => $expiration_date,
-        ]);
+        ];
         
+        /*
         // Storing the file in the storage
         Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
-
+        */
 
         // Sending the email to the user
         if($request['expiration'] != null){
@@ -84,6 +85,8 @@ class FileController extends Controller
         // Get every email from mail without spaces and comma
         $emails = preg_split('/[\s,]+/', $request->mail, -1, PREG_SPLIT_NO_EMPTY);
 
+
+        /*
         // Sending the email(s)
         foreach($emails as $email){
             Mail::to($email)->send(new \App\Mail\FileShared($details));
@@ -94,6 +97,13 @@ class FileController extends Controller
                 User::where('email', $email)->first()->recieved()->attach($file->id);
             }
         }
+        */
+
+        //add file in storage
+        Storage::put('files/' . $file_key , request('file')->storeAs('files/' . $file_key, $fileName));
+
+        // Dispatching the job
+        ProcessFile::dispatch($file, $emails, $details);
 
         return view('home');
     }
