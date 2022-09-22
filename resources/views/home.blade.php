@@ -33,11 +33,7 @@
 
 @if (Auth::check())
 <!-- Files recieved -->
-    @php
-        $recieved_files = Auth::user()->recieved;
-    @endphp
-
-    @if($recieved_files->count() > 0)
+    @if($userData['received']->count() > 0)
         <div class="row pt-2">
             <div class="row justify-content-center pt-5">
                 <div class="col-md-16">
@@ -49,7 +45,7 @@
                 </div>
             </div>
 
-        @foreach ($recieved_files as $file)
+        @foreach ($userData['received'] as $file)
             <div class="col-3 pb-3 pt-2">
                 <div class="card" style="max-width:282px">
                     <div class="card-header pt-3">
@@ -76,14 +72,11 @@
     @endif
 
 <!-- Files uploaded -->
-    @php
-        $uploaded_files = Auth::user()->files;    
-    @endphp
     <div class="row justify-content-center pt-5">
         <div class="col-md-16">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="pt-2" style="text-align: center"><strong>Uploaded files: {{ $uploaded_files->count() }} files</strong></h1>
+                    <h1 class="pt-2" style="text-align: center"><strong>Uploaded files: {{ $userData['uploaded']->count() }} files</strong></h1>
                 </div>
             </div>
         </div>
@@ -91,7 +84,7 @@
 
         <div class="row pt-2">
 
-            @foreach ($uploaded_files as $file)  
+            @foreach ($userData['uploaded'] as $file)  
                 @php
                     if($file->max_downloads == null){
                         $downloads = $file->downloads;   
@@ -147,22 +140,18 @@
         </div>
         
 <!-- Files downloaded -->
-        @php
-            $downloaded_files = Auth::user()->downloaded;
-        @endphp
-
         <div class="row pt-2">
             <div class="row justify-content-center pt-5">
                 <div class="col-md-16">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="pt-2" style="text-align: center"><strong>Downloaded files: {{ $downloaded_files->count() }} files</strong></h1>
+                            <h1 class="pt-2" style="text-align: center"><strong>Downloaded files: {{ $userData['downloaded']->count() }} files</strong></h1>
                         </div>
                     </div>
                 </div>
             </div>
         
-        @foreach ($downloaded_files as $file)
+        @foreach ($userData['downloaded'] as $file)
             <div class="col-3 pb-3 pt-2">
                 <div class="card" style="max-width:282px">
                     <div class="card-header pt-3">

@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\File;
-use App\Models\User;
+
 use App\Http\Requests\StoreFileRequest;
 use App\Jobs\ProcessFile;
+use App\Models\File;
+use App\Models\User;
 
 class FileController extends Controller
 {
 
     public function toUpload()
-    {
+    { 
         $this->checkAuth();
         return view('file.upload');
     }
