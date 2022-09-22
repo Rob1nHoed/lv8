@@ -18,7 +18,6 @@ class FileController extends Controller
 
     public function toUpload()
     { 
-        $this->checkAuth();
         return view('file.upload');
     }
 
@@ -153,8 +152,6 @@ class FileController extends Controller
 
     public function toEdit(File $file)
     {
-        $this->checkAuth();
-
         return view('file.edit', ['file' => $file]);
     }
 

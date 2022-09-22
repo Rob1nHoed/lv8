@@ -27,6 +27,8 @@ class HomeController extends Controller
     {
         $user = User::find(Auth::id());
 
+        if($user)
+        {
         $recieved_files = $user->recieved;
         $uploaded_files = $user->files;  
         $downloaded_files = $user->downloaded;
@@ -38,5 +40,10 @@ class HomeController extends Controller
         ];
         
         return view('home' , compact('userData'));
+        }
+        else
+        {
+            return view('home');
+        }
     }
 }
