@@ -17,10 +17,10 @@ Route::controller(FileController::class)->group(function () {
     //middelware auth group
     Route::middleware('auth')->group(function () {
         Route::get('/file', 'toUpload')->name('file.upload');
-        Route::get('/file/upload', 'toUpload')->name('file.upload')->middleware('auth');
+        Route::get('/file/upload', 'toUpload')->name('file.upload');
         Route::post('/file/upload/store', 'store')->name('file.store');
     
-        Route::get('/file/edit/{file}', 'toEdit')->name('file.toEdit')->middleware('auth');
+        Route::get('/file/edit/{file}', 'toEdit')->name('file.toEdit');
         Route::post('/file/edit/{file}/update', 'update')->name('file.update');
     
         Route::get('/file/delete/{file}', 'toDelete')->name('file.toDelete');
@@ -32,5 +32,3 @@ Route::controller(FileController::class)->group(function () {
 });
 
 Auth::routes();
-
-
