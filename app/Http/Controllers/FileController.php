@@ -219,11 +219,4 @@ class FileController extends Controller
         Auth::user()->recieved()->detach($file->id);
         return redirect()->route('home');
     }
-
-    private function checkAuth()
-    {
-        if(!Auth::check()){
-            return redirect()->route('login');
-        }
-    }
 }
