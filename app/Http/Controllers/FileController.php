@@ -94,7 +94,7 @@ class FileController extends Controller
             // If the recievers email is registered, add relation to the file
             if(User::where('email', $email)->exists()){
                 //$file->send()->attach(User::where('email', $request->mail)->first()->id);
-                User::where('email', $email)->first()->recieved()->attach($file->id);
+                User::where('email', $email)->first()->received()->attach($file->id);
             }
         }
         */
@@ -105,7 +105,7 @@ class FileController extends Controller
         // Dispatching the job
         ProcessFile::dispatch($file, $emails, $details);
 
-        return view('home');
+        return redirect()->route('home');
     }
     
     public function show(File $file)
@@ -200,7 +200,7 @@ class FileController extends Controller
 
         //find user by id and detach
         $user = User::find(Auth::id());
-        $user->recieved()->detach($file->id);
+        $user->received()->detach($file->id);
         $user->downloaded()->detach($file->id);
 
 
@@ -216,7 +216,7 @@ class FileController extends Controller
  
     public function removeFromSended(File $file)
     {
-        Auth::user()->recieved()->detach($file->id);
+        Auth::user()->received()->detach($file->id);
         return redirect()->route('home');
     }
 }

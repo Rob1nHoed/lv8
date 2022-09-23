@@ -53,7 +53,7 @@ class ProcessFile implements ShouldQueue
             Mail::to($email)->send(new \App\Mail\FileShared($this->details));
 
             if (User::where('email', $email)->exists()){
-                User::where('email', $email)->first()->recieved()->attach($fileData->id);
+                User::where('email', $email)->first()->received()->attach($fileData->id);
             }
         }
     }

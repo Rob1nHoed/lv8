@@ -27,14 +27,14 @@ class HomeController extends Controller
     {
         $user = User::find(Auth::id());
 
-        if($user)
-        {
-        $recieved_files = $user->recieved;
+        if($user != null){
+            
+        $received_files = $user->received;
         $uploaded_files = $user->files;  
         $downloaded_files = $user->downloaded;
 
         $userData = [
-            'received' => $recieved_files,
+            'received' => $received_files,
             'uploaded' => $uploaded_files,
             'downloaded' => $downloaded_files,
         ];
